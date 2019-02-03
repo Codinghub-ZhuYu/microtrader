@@ -9,6 +9,10 @@ REPO_NAME ?= microtrader
 TEST_REPO_NAME ?= microtrader-dev
 TEST_DIR ?= build/test-results/junit/
 
+DOCKER_REGISTRY ?= 678267097892.dkr.ecr.us-west-2.amazonaws.com
+AWS_ACCOUNT_ID ?= 678267097892
+DOCKER_LOGIN_EXPRESSION := eval $$(aws ecr get-login --no-include-email --region us-west-2 --registry-ids $(AWS_ACCOUNT_ID))
+
 # Release settings
 export HTTP_PORT ?= 8000
 export AUDIT_HTTP_ROOT ?= /audit/
@@ -34,6 +38,7 @@ version:
 # Use 'make test :nopull' to disable default pull behaviour
 test:
 	${INFO} "Building images..."
+	$(INFO	TEST-ARGS  is $(TEST_ARGS) with TEST_DIR is $(TEST_DIR))
 	@ docker-compose $(TEST_ARGS) build $(NOPULL_FLAG) test
 	${INFO} "Running tests..."
 	@ docker-compose $(TEST_ARGS) up test
